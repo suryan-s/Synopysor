@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 sample.txt
 sample2.txt
+/Model/small.en.pt
