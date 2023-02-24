@@ -1,20 +1,37 @@
 import whisper
+from transformers import pipeline
 
-# Download audio from YouTube video
-# ydl_opts = {
-#     'format': 'bestaudio/best',
-#     'outtmpl': '%(id)s.%(ext)s',
-# }
-# with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-#     info_dict = ydl.extract_info("https://www.youtube.com/watch?v=nBZT7lF5dag", download=False)
-#     audio_url = info_dict['formats'][0]['url']
-#     audio_bytes = io.BytesIO(ydl.extract_info("https://www.youtube.com/watch?v=nBZT7lF5dag", download=True)['formats'][0]['filesize'])
-#     with sf.SoundFile(audio_bytes) as f:
-#         audio_data = f.read()
-
+summarizer = pipeline("summarization")
 
 # Convert audio to text using OpenAI's whisper library
+print("Load model")
 model = whisper.load_model("small.en", download_root='Model', in_memory=True)
 # model = whisper.load_model("large-v2")
 result = model.transcribe("sample.mp3")
-print(result["text"])
+ARTICLE = result["text"]
+ARTICLE = ARTICLE.replace('.', '.<eos>').replace('?', '?<eos>').replace('!', '!<eos>')# type: ignore
+
+print("Split sentences")
+sentences = ARTICLE.split('<eos>')
+max_chunk = 500
+current_chunk = 0 
+chunks = []
+for sentence in sentences:
+    if len(chunks) == current_chunk + 1: 
+        if len(chunks[current_chunk]) + len(sentence.split(' ')) <= max_chunk:
+            chunks[current_chunk].extend(sentence.split(' '))
+        else:
+            current_chunk += 1
+            chunks.append(sentence.split(' '))
+    else:
+        print(current_chunk)
+        chunks.append(sentence.split(' '))
+
+for chunk_id in range(len(chunks)):
+    chunks[chunk_id] = ' '.join(chunks[chunk_id])
+    
+    
+print("Summarize chunks")
+res = summarizer(chunks, max_length=120, min_length=30, do_sample=False)
+text = ' '.join([summ['summary_text'] for summ in res])# type: ignore
+print(text)
