@@ -119,7 +119,7 @@ st.set_page_config(page_title='Synopysor',initial_sidebar_state="expanded",page_
 st.title('Synopysor')
 
 # Set default values
-image_path = r"temp\temp.jpg"
+image_path = os.path.join('temp','temp.jpg')
 max_len = 120
 
 # Input field for YouTube URL
