@@ -130,3 +130,9 @@ dmypy.json
 sample.txt
 sample2.txt
 /Model/small.en.pt
+/info.json
+/sample2.mp3
+/sample3.mp3
+/sample4.mp3
+/temp/temp.jpg
+/temp/temp.mp3
