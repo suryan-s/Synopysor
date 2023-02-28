@@ -1,9 +1,10 @@
-import streamlit as st
-import validators
 import os
+
+import streamlit as st
 import torch
-import yt_dlp
+import validators
 import whisper
+import yt_dlp
 from transformers import pipeline
 
 devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
@@ -12,7 +13,6 @@ devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def load_model():
     print("Loading Model")
     summarizer_ = pipeline("summarization")
-    # summarizer_ = pipeline("summarization")
     if os.path.exists(os.path.join('Model','small.en.pt')):
         print("Model Exists")
         model_ = whisper.load_model(os.path.join('Model','small.en.pt'),in_memory=True, device =devices)
