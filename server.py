@@ -9,18 +9,18 @@ from yt_dlp import YoutubeDL
 
 devices = device("cuda:0" if cuda.is_available() else "cpu")
 
-if os.path.exists('Model/distilbart-xsum-12-1'):
-    pass
-else:
-    print('Downloading Summarizing Model')
-    model_name = "sshleifer/distilbart-xsum-12-1"
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model.save_pretrained("Model/distilbart-xsum-12-1")
-    tokenizer.save_pretrained("Model/distilbart-xsum-12-1")
 
 # @st.cache_resource(experimental_allow_widgets=True,show_spinner=False)
 def load_model():
+    if os.path.exists('Model/distilbart-xsum-12-1'):
+        pass
+    else:
+        print('Downloading Summarizing Model')
+        model_name = "sshleifer/distilbart-xsum-12-1"
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model.save_pretrained("Model/distilbart-xsum-12-1")
+        tokenizer.save_pretrained("Model/distilbart-xsum-12-1")
     print("Loading Model")
     summarizer_ = pipeline("summarization",model="Model/distilbart-xsum-12-1", device=devices)
     if os.path.exists(os.path.join('Model','small.en.pt')):
