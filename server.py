@@ -1,30 +1,41 @@
 import os
 
 import streamlit as st
-import torch
 import validators
 import whisper
-import yt_dlp
-from transformers import pipeline
+from torch import cuda, device
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from yt_dlp import YoutubeDL
 
-devices = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
+devices = device("cuda:0" if cuda.is_available() else "cpu")
+
+if os.path.exists('Model/distilbart-xsum-12-1'):
+    pass
+else:
+    print('Downloading Summarizing Model')
+    model_name = "sshleifer/distilbart-xsum-12-1"
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model.save_pretrained("Model/distilbart-xsum-12-1")
+    tokenizer.save_pretrained("Model/distilbart-xsum-12-1")
 
 # @st.cache_resource(experimental_allow_widgets=True,show_spinner=False)
 def load_model():
     print("Loading Model")
-    summarizer_ = pipeline("summarization")
+    summarizer_ = pipeline("summarization",model="Model/distilbart-xsum-12-1", device=devices)
     if os.path.exists(os.path.join('Model','small.en.pt')):
         print("Model Exists")
-        model_ = whisper.load_model(os.path.join('Model','small.en.pt'),in_memory=True, device =devices)
+        model_ = whisper.load_model(os.path.join('Model','small.en.pt'),in_memory=True, device = devices)
         return model_, summarizer_
     else:
         print("Model Doesn't Exist")
-        model_ = whisper.load_model("small.en", download_root='Model', in_memory=True, device =devices)
+        model_ = whisper.load_model("small.en", download_root='Model', in_memory=True, device = devices)
         return model_, summarizer_
 
 
 def whisp_audio(location):
     model, summarizer__ = load_model()
+    
     # Convert audio to text using OpenAI's whisper library
     result = model.transcribe(location)
     ARTICLE = result["text"]
@@ -34,10 +45,10 @@ def whisp_audio(location):
 
 def make_chunks(sentences_):
     max_chunk = 500
-    current_chunk = 0 
+    current_chunk = 0
     chunks = []
     for sentence in sentences_:
-        if len(chunks) == current_chunk + 1: 
+        if len(chunks) == current_chunk + 1:
             if len(chunks[current_chunk]) + len(sentence.split(' ')) <= max_chunk:
                 chunks[current_chunk].extend(sentence.split(' '))
             else:
@@ -87,15 +98,15 @@ def get_audio(url):
     }
     
     # create yt-dlp object    
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
         info_dict = ydl.extract_info(url, download=False)
         v_name = info_dict['title'] #type: ignore
         
-    # os.rename(f'temp/{v_name}.webp', f'temp/temp.jpg') 
+    # os.rename(f'temp/{v_name}.webp', f'temp/temp.jpg')
     if os.path.exists(os.path.join('temp','temp.jpg')):
         os.remove(os.path.join('temp','temp.jpg'))
-    os.rename(os.path.join('temp','temp.webp'),os.path.join('temp','temp.jpg')) 
+    os.rename(os.path.join('temp','temp.webp'),os.path.join('temp','temp.jpg'))
     return v_name
 
 
@@ -106,7 +117,7 @@ def load_yt_details(y_url):
             res = get_audio(y_url)
             return res
         except Exception:
-            return False    
+            return False
 
 
 def show_image(image_path,image_title):
@@ -132,7 +143,7 @@ if ytb_url and not validators.url(ytb_url): #type: ignore
 # Show image and get max_len input
 if validators.url(ytb_url): #type: ignore
     image_title = load_yt_details(ytb_url)
-    if image_title!=False: 
+    if image_title!=False:
         st.success('Retrieved data')
         # Display image 
         show_image(image_path,image_title)

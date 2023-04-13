@@ -137,3 +137,5 @@ sample2.txt
 /temp/temp.jpg
 /temp/temp.mp3
 /hugFace
+/getModel.py
+/Model/distilbart-xsum-12-1
