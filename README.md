@@ -24,6 +24,18 @@ Synopysor is a Python-based project that serves as a YouTube summarizer. The pro
 
 - [ ] **Automatic Synchronization**: Implementing an automated system that periodically checks for new videos from subscribed channels and generates summaries would provide a convenient way for users to stay updated without manual input.
 
+- [ ] **Keyword Extraction**: Implement a feature that extracts important keywords or key phrases from the video's content and includes them in the summary. This can help users quickly identify the main topics covered in the video.
+
+- [ ] **Entity Recognition**: Integrate entity recognition capabilities to identify and highlight important entities mentioned in the video, such as people, locations, organizations, etc. This can provide users with additional context and insights.
+
+- [ ]**Sentiment Analysis**: Analyze the sentiment of the video's content and include a sentiment score or a summary of the overall sentiment in the generated summary. This can help users understand the emotional tone of the video.
+
+- [ ]**Topic Clustering**: Group related sentences or paragraphs in the summary based on common topics or themes. This can provide a structured and organized summary that is easier to comprehend.
+
+- [ ]**Interactive Summary Visualization**: Create a visual representation of the summary, such as a word cloud or a bar chart, to highlight the most frequently mentioned words or topics in the video. This can provide users with a quick overview of the video's content.
+
+- [ ] **Multiple Summaries**: Allow users to generate multiple summaries of different lengths for the same video. This gives users the flexibility to choose a summary that matches their requirements or time constraints.
+
 - [ ] **Additional Features**: To further enhance the user experience and utility, such as:
   - Interactive visualization of the summarization process
   - Support for multiple languages
