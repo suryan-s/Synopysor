@@ -22,6 +22,8 @@ Synopysor is a Python-based project that serves as a YouTube summarizer. The pro
 
 - [ ] **Faster Inference**: Optimize the project's inference time by exploring techniques such as model optimization, parallel processing, or any other possible ways. This enhancement will enable users to obtain results more quickly and efficiently.
 
+- [ ] **Automatic Synchronization**: Implementing an automated system that periodically checks for new videos from subscribed channels and generates summaries would provide a convenient way for users to stay updated without manual input.
+
 - [ ] **Additional Features**: To further enhance the user experience and utility, such as:
   - Interactive visualization of the summarization process
   - Support for multiple languages
